@@ -99,14 +99,14 @@ func InsertData(db *sql.DB, values []string) error {
 	return nil
 }
 func main() {
-	_, err := ConnectDB()
+	db, err := ConnectDB()
 	if err != nil {
 		fmt.Println("err  \n", err)
 	}
-	// data, err := ReadColumn()
-	// if err != nil {
-	// 	fmt.Println("Error in fetching data", data)
-	// }
-	// // fmt.Println(data)
-	// InsertData(db, data)
+	data, err := ReadColumn()
+	if err != nil {
+		fmt.Println("Error in fetching data", data)
+	}
+	// fmt.Println(data)
+	InsertData(db, data)
 }
