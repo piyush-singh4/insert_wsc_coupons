@@ -32,7 +32,7 @@ func init() {
 	fmt.Println(port)
 }
 func ConnectDB() (*sql.DB, error) {
-	db, errdb := sql.Open("postgres", "dbname=db_abw user='flowxpertpreprod' password='fL0w3xp$1976' host='10.21.222.11'")
+	db, errdb := sql.Open("postgres", fmt.Sprintf("dbname=db_abw user='%s' password='%s' host='%s' port=%s", user, pass, host, port))
 	if errdb != nil {
 		return nil, errdb
 	}
@@ -64,11 +64,12 @@ func ReadColumn() ([]string, error) {
 	return data, nil
 }
 func InsertData(db *sql.DB, values []string) error {
+	// timeExpiry := time.Date(2025, time.May, 31, 0, 0, 0, 0, time.UTC)
 	var partner_id string
 	var offer_id string
-	db.QueryRow(`SELECT partner_id FROM wsc.partners WHERE partner_name=$1`, "Striders").Scan(&partner_id)
+	db.QueryRow(`SELECT partner_id FROM wsc.partners WHERE partner_name=$1`, "Metropolis").Scan(&partner_id)
 	db.QueryRow(`SELECT offer_id FROM wsc.offers WHERE partner_id=$1`, partner_id).Scan(&offer_id)
-	query := `INSERT INTO wsc.coupons (offer_id,created_timestamp,coupon_code) VALUES ($1,$2,$3)`
+	query := `INSERT INTO wsc.coupons (offer_id,created_timestamp,coupon_code,expiry_timestamp) VALUES ($1,$2,$3)`
 	fmt.Printf("Partner_id %s\n", partner_id)
 	fmt.Printf("Offer_id %s\n", offer_id)
 
