@@ -99,7 +99,7 @@ func InsertData(db *sql.DB, values []string) error {
 	return nil
 }
 func main() {
-	_, err := ConnectDB()
+	db, err := ConnectDB()
 	if err != nil {
 		fmt.Println("err  \n", err)
 	}
@@ -108,5 +108,5 @@ func main() {
 		fmt.Println("Error in fetching data", data)
 	}
 	// fmt.Println(data)
-	// InsertData(db, data)
+	InsertData(db, data)
 }
