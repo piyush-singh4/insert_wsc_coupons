@@ -33,7 +33,6 @@ func init() {
 }
 func ConnectDB() (*sql.DB, error) {
 	db, errdb := sql.Open("postgres", fmt.Sprintf("dbname=db_abw user='%s' password='%s' host='%s' port=%s", user, pass, host, port))
-	// db, errdb := sql.Open("postgres", "dbname=db_abw user='flowxpertpreprod' password='fL0w3xp$1976' host='10.21.222.11'")
 	if errdb != nil {
 		return nil, errdb
 	}
