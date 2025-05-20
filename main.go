@@ -64,11 +64,12 @@ func ReadColumn() ([]string, error) {
 	return data, nil
 }
 func InsertData(db *sql.DB, values []string) error {
+	timeExpiry := time.Date(2025, time.May, 31, 0, 0, 0, 0, time.UTC)
 	var partner_id string
 	var offer_id string
 	db.QueryRow(`SELECT partner_id FROM wsc.partners WHERE partner_name=$1`, "Cult").Scan(&partner_id)
 	db.QueryRow(`SELECT offer_id FROM wsc.offers WHERE partner_id=$1`, partner_id).Scan(&offer_id)
-	query := `INSERT INTO wsc.coupons (offer_id,created_timestamp,coupon_code) VALUES ($1,$2,$3)`
+	query := `INSERT INTO wsc.coupons (offer_id,created_timestamp,coupon_code,expiry_timestamp) VALUES ($1,$2,$3,$4)`
 	fmt.Printf("Partner_id %s\n", partner_id)
 	fmt.Printf("Offer_id %s\n", offer_id)
 
@@ -83,7 +84,7 @@ func InsertData(db *sql.DB, values []string) error {
 	}
 	defer stmt.Close()
 	for _, value := range values {
-		_, err := stmt.Exec(offer_id, time.Now(), value)
+		_, err := stmt.Exec(offer_id, time.Now(), value, timeExpiry)
 		fmt.Printf("Inserting coupon code %s\n", value)
 		if err != nil {
 			log.Printf("Failed to insert value '%s': %v\n", value, err)
