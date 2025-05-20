@@ -32,7 +32,8 @@ func init() {
 	fmt.Println(port)
 }
 func ConnectDB() (*sql.DB, error) {
-	db, errdb := sql.Open("postgres", "dbname=db_abw user='flowxpertpreprod' password='fL0w3xp$1976' host='10.21.222.11'")
+	db, errdb := sql.Open("postgres", fmt.Sprintf("dbname=db_careplix user='%s' password='%s' host='%s' port=%s", user, pass, host, port))
+	// db, errdb := sql.Open("postgres", "dbname=db_abw user='flowxpertpreprod' password='fL0w3xp$1976' host='10.21.222.11'")
 	if errdb != nil {
 		return nil, errdb
 	}
@@ -45,7 +46,7 @@ func ConnectDB() (*sql.DB, error) {
 }
 
 func ReadColumn() ([]string, error) {
-	xlFile, err := xlsx.OpenFile("data1.xlsx")
+	xlFile, err := xlsx.OpenFile("Cult.xlsx")
 	if err != nil {
 		return nil, err
 	}
@@ -66,7 +67,7 @@ func ReadColumn() ([]string, error) {
 func InsertData(db *sql.DB, values []string) error {
 	var partner_id string
 	var offer_id string
-	db.QueryRow(`SELECT partner_id FROM wsc.partners WHERE partner_name=$1`, "Striders").Scan(&partner_id)
+	db.QueryRow(`SELECT partner_id FROM wsc.partners WHERE partner_name=$1`, "Cult").Scan(&partner_id)
 	db.QueryRow(`SELECT offer_id FROM wsc.offers WHERE partner_id=$1`, partner_id).Scan(&offer_id)
 	query := `INSERT INTO wsc.coupons (offer_id,created_timestamp,coupon_code) VALUES ($1,$2,$3)`
 	fmt.Printf("Partner_id %s\n", partner_id)
@@ -99,7 +100,7 @@ func InsertData(db *sql.DB, values []string) error {
 	return nil
 }
 func main() {
-	db, err := ConnectDB()
+	_, err := ConnectDB()
 	if err != nil {
 		fmt.Println("err  \n", err)
 	}
@@ -108,5 +109,5 @@ func main() {
 		fmt.Println("Error in fetching data", data)
 	}
 	// fmt.Println(data)
-	InsertData(db, data)
+	// InsertData(db, data)
 }
