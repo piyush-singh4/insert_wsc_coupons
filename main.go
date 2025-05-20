@@ -69,7 +69,7 @@ func InsertData(db *sql.DB, values []string) error {
 	var offer_id string
 	db.QueryRow(`SELECT partner_id FROM wsc.partners WHERE partner_name=$1`, "Metropolis").Scan(&partner_id)
 	db.QueryRow(`SELECT offer_id FROM wsc.offers WHERE partner_id=$1`, partner_id).Scan(&offer_id)
-	query := `INSERT INTO wsc.coupons (offer_id,created_timestamp,coupon_code,expiry_timestamp) VALUES ($1,$2,$3)`
+	query := `INSERT INTO wsc.coupons (offer_id,created_timestamp,coupon_code) VALUES ($1,$2,$3)`
 	fmt.Printf("Partner_id %s\n", partner_id)
 	fmt.Printf("Offer_id %s\n", offer_id)
 
@@ -109,5 +109,9 @@ func main() {
 		fmt.Println("Error in fetching data", data)
 	}
 	// fmt.Println(data)
-	InsertData(db, data)
+	err = InsertData(db, data)
+	if err != nil {
+		fmt.Println("Error in inserting data", err)
+
+	}
 }
